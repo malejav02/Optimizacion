@@ -1,0 +1,32 @@
+def dijkstra(graph, source):
+
+    n = graph.nodes
+    Q = set([i for i in range(n)])
+    #
+    dist = {i : float('inf') for i in range(n)}
+    prev = [None] * n
+    #
+    dist[source] = 0
+
+    while Q:
+        # search for vertex in Q with min distance
+        u = -1
+        m = float('inf')
+        for i in Q:
+            if dist[i] < m:
+                m = dist[i]
+                u = i
+
+        # remove u from Q
+        # print(Q)
+        Q.remove(u)
+        neighs_of_u = graph.neigh[u]
+        # print(neighs_of_u)
+        for v in neighs_of_u:
+            if v in Q:
+                alt = dist[u] + graph.edges[(u, v)]
+                if alt < dist[v]:
+                    dist[v] = alt
+                    prev[v] = u
+
+    return dist, prev
