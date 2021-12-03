@@ -1,1 +1,40 @@
+import numpy as np
+import pandas as pd
 
+inf=np.inf
+
+#Matriz de ejemplo
+matriz=np.array([[0,8,inf,1],
+                 [inf,0,1,inf],
+                 [4,inf,0,inf],
+                 [inf,2,9,0]])
+                 
+matrizinicio=np.array([[1,1,1,1],
+                       [2,2,2,2],
+                       [3,3,3,3],
+                       [4,4,4,4]])
+                       
+tamaño=matriz.shape[1]
+
+# for para vertice intermedio
+for i in range(0,tamaño):
+
+    # for para vertice origen
+    for j in range(0,tamaño):
+        if i != j:
+        
+            #for para vertice final
+            for k in range(0,tamaño):
+                if j!=k and i!=k:
+                    if matriz[j,i]+matriz[i,k] < matriz[j,k]:
+                        matriz[j,k]=matriz[j,i]+matriz[i,k]
+                        matrizinicio[j,k]=matrizinicio[i,k]
+                        
+                        
+    print('Iteración #',i+1,'\n','\n',
+          'Matriz de costos','\n',
+          pd.DataFrame(matriz,columns=['','','',''],index=['','','','']),'\n',
+          '\n','Matriz de vértices','\n',
+          pd.DataFrame(matrizinicio,columns=['','','','']), '\n')
+  
+        
