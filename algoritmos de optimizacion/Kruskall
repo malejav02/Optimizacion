@@ -1,0 +1,39 @@
+% Se insertan los datos al grafo
+G = graph;
+for i = 1:16
+    for j = 1:16
+        if i==j
+            break
+        end
+        G = addedge(G,i,j,data(i,j));
+    end
+end
+
+% Se crea un nuevo grafo que se puede considerar como un bosque, donde cada nodo sería un arbol.
+% Luego, lo que se hace es unir estos arboles con otros por medio de los arcos de mínimo peso.
+tree2 = graph;
+
+%  Ordenamos los arcos de menor a mayor, de acuerdo con los pesos de sus arcos.
+P = sort(G.Edges.Weight);
+
+% En la lista ordenada los elementos deben ser únicos porque, si se repiten, podrian crearse ciclos fantasmas.
+P = unique(P);
+
+% Se crea un grafo auxiliar para no cambiar el original.
+T = G;
+for i = P.'
+    
+% Se recorre la lista de pesos buscando los arcos correspondientes para unirlos al árbol de mínima expansión.
+    I = find(T.Edges.Weight==i);
+    for j = I.'
+        tree2 = addedge(tree2,T.Edges.EndNodes(j,1),T.Edges.EndNodes(j,2),i);
+        
+% Si al momento de agregar el arco se forma un ciclo, este se quita. Para mirar si hay ciclos en el grafo 
+% se verifica con la función hascycle.
+
+        if hascycles(tree2)
+            tree2 = rmedge(tree2,T.Edges.EndNodes(j,1),T.Edges.EndNodes(j,2));
+        end
+    end
+end
+plot(tree2)
